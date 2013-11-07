@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'minimo.tassa',
     'minimo.movimento',
     'minimo.documento',
+    'minimo.diario',
     'dajaxice',
     'dajax',
     'crispy_forms',

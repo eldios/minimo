@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, EmailMessage
 from django.core import serializers
 from django.utils import simplejson
+from django.core.urlresolvers import reverse
 
 import webodt
 import pdb

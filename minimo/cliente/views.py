@@ -24,6 +24,7 @@ from django.utils import simplejson
 
 from minimo.cliente.models import *
 from minimo.cliente.forms import *
+from minimo.diario.models import *
 from minimo.documento.models import *
 from minimo.utils import *
 
@@ -124,13 +125,15 @@ def export_clienti(request):
 
 @login_required
 def cliente(request,c_id):
-    c= Cliente.objects.get(id=c_id)
+    c = Cliente.objects.get(id=c_id)
     documenti = Documento.objects.filter(ragione_sociale=c.ragione_sociale)
+    attivita = Attivita.objects.filter(cliente=c)
     form = AtomForm()
     context = {
         'request':request,
         'form': form,
         'c': c ,
+        'a': attivita,
         'fa': documenti.filter(tipo='FA'),
         'pr': documenti.filter(tipo='PR'),
         'ra': documenti.filter(tipo='RA'),

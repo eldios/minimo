@@ -20,6 +20,7 @@ urlpatterns = patterns('minimo',
     url(r'^template/', include('minimo.template.urls')),
     url(r'^tasse/', include('minimo.tassa.urls')),
     url(r'^movimenti/', include('minimo.movimento.urls')),
+    url(r'^diario/', include('minimo.diario.urls')),
     url(r'^allegati/', include('attachments.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

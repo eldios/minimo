@@ -112,6 +112,7 @@
 		<li><a href="#tab-2" data-toggle="tab">Ritenute</a></li>
 		<li><a href="#tab-3" data-toggle="tab">Preventivi</a></li>
 		<li><a href="#tab-4" data-toggle="tab">Ordini</a></li>
+		<li><a href="#tab-5" data-toggle="tab">Diario</a></li>
     </ul>
     <div class="tab-content">
 		<div class="tab-pane fade in active" id="tab-1">
@@ -218,6 +219,30 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="tab-pane fade in " id="tab-5">
+			<table class="table table-striped" id="diario">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Descrizione</th>
+						<th>Stato</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for doc in a %}
+						<tr>
+							<td><a href="{% url 'minimo.diario.views.dettaglioattivita' doc.id %}" ><i class="icon-search"> </i> 
+								{{doc.id}}</a></td>
+							<td>{{doc.descrizione}}</td>
+							<td>
+								{% if doc.stato %}<i class="icon-check"></i>
+								{% else %}<i class="icon-check-empty"></i>{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
@@ -227,5 +252,6 @@
 <h4>Azioni</h4>
 <a href="{% url 'minimo.cliente.views.modificacliente' c.id %}" class="btn btn-block "><i class="icon-edit"></i> modifica</a>
 <a href="#" class="btn btn-block " onClick="CancellaCliente();"><i class="icon-trash"></i> elimina</a>
+<a href="{% url 'minimo.diario.views.nuovattivitacliente' c.id %}" class="btn btn-block "><i class="icon-edit"></i> Nuova Attività</a>
 
 {% endblock%}

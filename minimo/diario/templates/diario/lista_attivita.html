@@ -1,0 +1,57 @@
+
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li><a href="/">Home</a> <span class="divider">/</span></li>
+<li><a href="{% url 'minimo.diario.views.listaattivita' %}">Elenco Ativita</a></li>
+{% endblock %}
+
+{% block meta_title %}Elenco attivita{% endblock %}
+
+{% block title %}<i class="icon-group"></i>Elenco attivita{% endblock%}
+
+{% block main %}
+
+<table class="table table-striped" id="clienti">
+	<thead>
+	<tr>
+		<th>Cliente</th>
+		<th>Descizione</th>
+		<th>Stato</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+
+{% for a in attivita %}
+	<tr>
+		<td>
+			<a href="{% url 'minimo.cliente.views.cliente' a.cliente.id %}"><i class="icon-search"></i> {{a.cliente}}</a>
+		</td>
+		<td>
+			<a href="{% url 'minimo.diario.views.dettaglioattivita' a.id %}"><i class="icon-search"></i>{{a.descrizione}}</a>
+		</td>
+		<td>
+			{% if a.stato %}
+				<i class="icon-check"></i>
+			{% else %}
+				<i class="icon-check-empty"></i>
+			{% endif %}
+		</td>
+		<td>
+			<div class="btn-group">
+				<a href="#" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
+				<a href="{% url 'minimo.diario.views.eattivita' a.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
+			</div>
+		</td>
+	</tr>
+{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+{% block left %}
+	<h4>Azioni</h4>
+	
+{% endblock%}
