@@ -55,13 +55,13 @@
 					<li><a href="{% url 'django.contrib.auth.views.logout' %}">Esci</a></li>
 				</ul>
 			</div>
-		{%else%}
+		{% comment %}{%else%}
 			<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="navbar-form pull-right"> {% csrf_token %}
 			<input type="hidden" name="next" value="{{request.path}}" />
 			<input id="id_username" type="text" name="username" class="input" placeholder="Utente"> 
 			<input type="password" name="password" id="id_password" class="input" placeholder="Password"> 
 			<button type="submit" class="btn"><i class="icon-key"></i> Accedi</button>
-			</form>
+			</form>{% endcomment %}
 		{% endif %}
 	</div>
 </div>

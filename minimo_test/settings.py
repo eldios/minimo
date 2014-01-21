@@ -122,6 +122,7 @@ MIDDLEWARE_CLASSES = (
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'minimo_test.wsgi.application'
 
+LOGIN_REDIRECT_URL = "/clienti"
 
 INSTALLED_APPS = (
     'django.contrib.auth',

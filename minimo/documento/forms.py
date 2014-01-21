@@ -202,7 +202,7 @@ class LoginForm(AuthenticationForm):
             Field('username', placeholder="username"),
             Field('password', placeholder="password"),
             FormActions(
-                Submit('save', 'Salva', css_class="btn-primary")
+                Submit('save', 'Accedi', css_class="btn-primary")
             )
         )
 
