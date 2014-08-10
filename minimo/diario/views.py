@@ -40,9 +40,10 @@ def listaattivitacliente(request, id_c):
 @login_required
 def listarighe(request):
     azione = 'lista'
-    righe = RigaAttivita.objects.filter(fatturata=False).exclude(cliente=None)[:100]
+    righe_da_fatt = RigaAttivita.objects.filter(fatturata=False).exclude(cliente=None)[:100]
+    righe_fatt = RigaAttivita.objects.filter(fatturata=True).exclude(cliente=None)[:100]
     formRiga = RigaForm()
-    return render_to_response( 'diario/lista_righe.html', {'request':request, 'righe': righe, 'form': formRiga,}, RequestContext(request))
+    return render_to_response( 'diario/lista_righe.html', {'request':request, 'righe_da_fatt': righe_da_fatt, 'righe_fatt':righe_fatt, 'form': formRiga,}, RequestContext(request))
 
 @login_required
 def listaattivitacliente(request, id_c):
@@ -103,7 +104,7 @@ def nuovarigattivita(request):
             return HttpResponseRedirect(reverse('minimo.diario.views.listarighe', ))
     else:
         form = RigaForm()
-        form.helper.form_action = reverse('minimo.diario.views.nrigattivita', args=(str(attivita.id),),)
+        form.helper.form_action = reverse('minimo.diario.views.nuovarigattivita', args=(str(attivita.id),),)
     return render_to_response('diario/form_attivita.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
 
 
@@ -175,7 +176,7 @@ def mrigattivita(request, id_a):
         if form.is_valid():
 
             form.save()
-            return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(attivita.id),)))
+            return HttpResponseRedirect(reverse('minimo.diario.views.listarighe',))
     else:
         print 'no post'
         form = RigaForm(instance=riga)
@@ -188,7 +189,7 @@ def erigattivita(request,a_id):
     riga = RigaAttivita.objects.get(id=a_id)
     a = riga.attivita.id
     riga.delete()
-    return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(a,)))
+    return HttpResponseRedirect(reverse('minimo.diario.views.listarighe',))
 
 @login_required
 def eattivitacliente(request,a_id):

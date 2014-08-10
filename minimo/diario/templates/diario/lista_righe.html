@@ -34,64 +34,143 @@
 
 
 {% block main %}
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Da faturare</a></li>
+            <li><a href="#tab2" data-toggle="tab">Fatturate</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <p>
+                    <table class="table table-striped" id="attivita">
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Attivit&agrave</th>
+                            <th>Descrizione</th>
+                            <th>Inizio</th>
+                            <th>Fine</th>
+                            <th>Quantit&agrave</th>
+                            <th>Prezzo</th>
+                            <th>Fatturata</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-<table class="table table-striped" id="attivita">
-    <thead>
-    <tr>
-        <th>Cliente</th>
-        <th>Attivit&agrave</th>
-        <th>Descrizione</th>
-        <th>Inizio</th>
-        <th>Fine</th>
-        <th>Quantit&agrave</th>
-        <th>Prezzo</th>
-        <th>Stato</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
+                        {% for r in righe_da_fatt %}
+                            <tr>
+                                <td>
+                                    {{r.cliente}}
+                                </td>
+                                <td>
+                                    {{r.attivita}}
+                                </td>
+                                <td>
+                                    {{r.descrizione}}
+                                </td>
+                                <td>
+                                    {% if r.inizio %}
+                                        {{r.inizio}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if r.fine %}
+                                        {{r.fine}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{r.quantita|floatformat:2}}
+                                </td>
+                                <td>
+                                    {{r.prezzo}}
+                                </td>
+                                <td>
+                                    {% if r.fatturata %}
+                                        <i class="icon-check icon-large"></i>
+                                    {% else %}
+                                        <i class="icon-check-empty icon-large"></i>
+                                    {% endif %}
 
-    {% for r in righe %}
-        <tr>
-            <td>
-                {{r.cliente}}
-            </td>
-            <td>
-                {{r.attivita}}
-            </td>
-            <td>
-                {{r.descrizione}}
-            </td>
-            <td>
-                {% if r.inizio %}
-                    {{r.inizio}}
-                {% endif %}
-            </td>
-            <td>
-                {% if r.fine %}
-                    {{r.fine}}
-                {% endif %}
-            </td>
-            <td>
-                {{r.quantita}}
-            </td>
-            <td>
-                {{r.prezzo}}
-            </td>
-            <td>
-                {{r.stato}}
-            </td>
+                                </td>
 
-            <td>
-                <div class="btn-group">
-                    <a href="{% url 'minimo.diario.views.mrigattivita' r.id %}" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
-                    <a href="{% url 'minimo.diario.views.erigattivita' r.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
-                </div>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'minimo.diario.views.mrigattivita' r.id %}" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
+                                        <a href="{% url 'minimo.diario.views.erigattivita' r.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </p>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <p>
+                    <table class="table table-striped" id="attivita">
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Attivit&agrave</th>
+                            <th>Descrizione</th>
+                            <th>Inizio</th>
+                            <th>Fine</th>
+                            <th>Quantit&agrave</th>
+                            <th>Fatturata</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for r in righe_fatt %}
+                            <tr>
+                                <td>
+                                    {{r.cliente}}
+                                </td>
+                                <td>
+                                    {{r.attivita}}
+                                </td>
+                                <td>
+                                    {{r.descrizione}}
+                                </td>
+                                <td>
+                                    {% if r.inizio %}
+                                        {{r.inizio}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if r.fine %}
+                                        {{r.fine}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{r.quantita|floatformat:2}}
+                                </td>
+                                <td>
+                                    {% if r.fatturata %}
+                                        <i class="icon-check icon-large"></i>
+                                    {% else %}
+                                        <i class="icon-check-empty icon-large"></i>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'minimo.diario.views.mrigattivita' r.id %}" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
+                                        <a href="{% url 'minimo.diario.views.erigattivita' r.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </p>
+            </div>
+        </div>
+    </div>
+
 
     <table class="table table-striped" id="clienti">
         <thead>
