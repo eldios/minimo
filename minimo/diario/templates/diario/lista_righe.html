@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <link href="/static/css/datetimepicker.css" rel="stylesheet">
+    <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/static/js/locales/bootstrap-datetimepicker.it.js"></script>
+{% endblock%}
+
+{% block breadcrumb %}
+<li><a href="/">Home</a> <span class="divider">/</span></li>
+<li><a href="#">Elenco Ativita</a></li>
+{% endblock %}
+
+{% block meta_title %}Elenco attivita{% endblock %}
+
+{% block title %}<i class="icon-group"></i>  Elenco attivita {% endblock%}
+
+{% block js %}
+    <script type="text/javascript" charset="utf-8">
+        function CancellaAttivita() {
+                if ( confirm("Vuoi veramente cancellare questa attivit&agrave?") ) {
+                        document.location.href = "{% url 'minimo.diario.views.eattivitacliente' 1 %}";
+                        }
+                }
+        function CreaFattura() {
+                if ( confirm("Creare una fattura da questa attivit&agrave?") ) {
+                        document.location.href = "{% url 'minimo.diario.views.fattura_attivita' 1 %}";
+                        }
+                }
+    </script>
+
+{% endblock js %}
+
+
+{% block main %}
+
+<table class="table table-striped" id="attivita">
+    <thead>
+    <tr>
+        <th>Cliente</th>
+        <th>Attivit&agrave</th>
+        <th>Descrizione</th>
+        <th>Inizio</th>
+        <th>Fine</th>
+        <th>Quantit&agrave</th>
+        <th>Prezzo</th>
+        <th>Stato</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for r in righe %}
+        <tr>
+            <td>
+                {{r.cliente}}
+            </td>
+            <td>
+                {{r.attivita}}
+            </td>
+            <td>
+                {{r.descrizione}}
+            </td>
+            <td>
+                {% if r.inizio %}
+                    {{r.inizio}}
+                {% endif %}
+            </td>
+            <td>
+                {% if r.fine %}
+                    {{r.fine}}
+                {% endif %}
+            </td>
+            <td>
+                {{r.quantita}}
+            </td>
+            <td>
+                {{r.prezzo}}
+            </td>
+            <td>
+                {{r.stato}}
+            </td>
+
+            <td>
+                <div class="btn-group">
+                    <a href="{% url 'minimo.diario.views.mrigattivita' r.id %}" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
+                    <a href="{% url 'minimo.diario.views.erigattivita' r.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+    <table class="table table-striped" id="clienti">
+        <thead>
+            <th>Cliente</th>
+            <th>Attivit&agrave</th>
+            <th>Descrizione</th>
+            <th>Inizio</th>
+            <th>Fine</th>
+            <th>Quantit&agrave</th>
+            <th>Prezzo</th>
+            <th></th>
+        </thead>
+        <tr>
+        <td>
+            <form  method="post" action="{% url 'minimo.diario.views.nuovarigattivita'%}">{% csrf_token %}
+            {% render_field form.cliente|attr:"style:width:90%;" %}
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.attivita|attr:"style:width:90%;" %}
+            </div>
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.descrizione|attr:"rows:5"|attr:"style:width:90%;"|add_class:"textarea" %}
+            </div>
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.inizio|attr:"style:width:90%;"|add_class:"dateinput" %}
+
+            </div>
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.fine|attr:"style:width:90%;"|add_class:"dateinput"%}
+            </div>
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.quantita|attr:"style:width:90%;" %}
+            </div>
+        </td>
+        <td>
+            <div class="input-append">
+                {% render_field form.prezzo|attr:"style:width:90%;" %}
+            </div>
+        </td>
+        <td>
+            <input type="submit" name="save" value="Aggiungi" class="btn btn-primary btn-primary" id="submit-id-save"/> </form>
+        </td>
+
+    </tbody>
+</table>
+
+<script>
+    window.onload = function()
+        {
+            $(".dateinput").datetimepicker({format: 'dd/mm/yyyy hh:mm',autoclose: true,  language: 'it'});
+        };
+</script>
+
+{% endblock %}
+
+{% block left %}
+    <h4>Azioni</h4>
+        <a href="#" class="btn btn-block "><i class="icon-edit"></i> Modifica</a>
+        <a href="#" class="btn btn-block " onClick="CancellaAttivita();"><i class="icon-trash"></i> Elimina</a>
+        <a href="{% url 'minimo.diario.views.nuovattivita'%}" class="btn btn-block "><i class="icon-edit"></i> Nuova Attivit&agrave</a>
+
+{% endblock%}

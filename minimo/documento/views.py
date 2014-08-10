@@ -340,9 +340,10 @@ def stampa_documento(request,f_id):
         fattura=f,
         )
 
-    document = template.render(Context(context))
+    documento = template.render(Context(context))
     conv = converter()
-    pdf = conv.convert(document, format='pdf')
+    pdf = conv.convert(documento, format='pdf')
+
     #return render_to_response( 'modello_documento.html', {'request':request, 'f': f})
     response = HttpResponse(pdf, mimetype='application/pdf')
     if f.tipo == 'RA':

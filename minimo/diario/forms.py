@@ -9,12 +9,12 @@ from minimo.diario.models import Attivita, Riga as RigaAttivita
 from minimo.documento.models import Documento, Ritenuta
 from minimo.cliente.models import *
 
-class AttivitaForm(forms.ModelForm):
-    
+class AttivitaClienteForm(forms.ModelForm):
+
     class Meta:
         model = Attivita
         exclude = ('cliente', )
-        
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.helper = FormHelper()
@@ -27,14 +27,30 @@ class AttivitaForm(forms.ModelForm):
         )
         super( AttivitaForm, self).__init__(*args, **kwargs)
 
+class AttivitaForm(forms.ModelForm):
+
+    class Meta:
+        model = Attivita
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('descrizione'),
+            Field('stato'),
+            FormActions(
+                Submit('save', 'Aggiungi', css_class="btn-primary")
+            )
+        )
+        super( AttivitaForm, self).__init__(*args, **kwargs)
 
 class AttivitaRigaForm(forms.ModelForm):
-    
+
     class Meta:
         model = RigaAttivita
         exclude = ('attivita', 'fatturata', 'imposta', )
-        
-        
+
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.helper = FormHelper()
@@ -50,8 +66,30 @@ class AttivitaRigaForm(forms.ModelForm):
             )
         )
         super( AttivitaRigaForm, self).__init__(*args, **kwargs)
- 
 
+class RigaForm(forms.ModelForm):
+
+    class Meta:
+        model = RigaAttivita
+        exclude = ( 'imposta', )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('cliente'),
+            Field('attivita'),
+            Field('descrizione'),
+            Field('inizio'),
+            Field('fine'),
+            Field('quantita'),
+            Field('prezzo'),
+            Field('fatturata'),
+            FormActions(
+                Submit('save', 'Aggiungi', css_class="btn-primary")
+            )
+        )
+        super( RigaForm, self).__init__(*args, **kwargs)
 
 def get_ritenute():
     output = [('---', '---')]
@@ -62,15 +100,15 @@ def get_ritenute():
 class FatturaAttivitaForm(forms.ModelForm):
     stato = forms.BooleanField(widget=forms.HiddenInput(), required=False)
 
-    
+
     class Meta:
         model = Documento
-    
-        
+
+
     def __init__(self, *args, **kwargs):
-        
+
         super(FatturaAttivitaForm, self).__init__(*args, **kwargs)
-  
+
         self.fields['descrizione_ritenuta'] = forms.ChoiceField(choices=get_ritenute(), required=False )
         self.helper = FormHelper()
         self.helper.layout = Layout(

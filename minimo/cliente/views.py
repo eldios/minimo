@@ -24,7 +24,7 @@ from django.utils import simplejson
 
 from minimo.cliente.models import *
 from minimo.cliente.forms import *
-from minimo.diario.models import *
+from minimo.diario.models import Riga as RigaAttivita
 from minimo.documento.models import *
 from minimo.utils import *
 
@@ -42,7 +42,7 @@ def nuovocliente(request):
             c=form.save(commit=False)
             c.user=request.user
             c.save()
-            return HttpResponseRedirect(reverse('minimo.cliente.views.clienti', )) 
+            return HttpResponseRedirect(reverse('minimo.cliente.views.clienti', ))
     else:
         form = ClienteForm()
     return render_to_response('cliente/form_cliente.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
@@ -58,7 +58,7 @@ def nuovoatom(request,c_id):
             data = form.cleaned_data
             a = Atom(cliente=c, riferimento=data['riferimento'], tipo=data['tipo'], valore=data['valore'], principale=False)
             a.save()
-            return HttpResponseRedirect(reverse('minimo.cliente.views.cliente', args=(str(c.id),))) 
+            return HttpResponseRedirect(reverse('minimo.cliente.views.cliente', args=(str(c.id),)))
     else:
         form = AtomForm()
         form.helper.form_action = reverse('minimo.cliente.views.nuovoatom', args=(str(c.id),))
@@ -83,38 +83,38 @@ def modificaatom(request,a_id):
         form.helper.form_action = reverse('minimo.cliente.views.modificaatom', args=(str(a.id),),)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('minimo.cliente.views.cliente', args=(str(c.id),))) 
+            return HttpResponseRedirect(reverse('minimo.cliente.views.cliente', args=(str(c.id),)))
     else:
         form = AtomForm(instance=a)
         form.helper.form_action = reverse('minimo.cliente.views.modificaatom', args=(str(a.id),))
     return render_to_response('cliente/form_atom.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
 
-    
+
 @login_required
 def modificacliente(request,c_id):
     azione = 'modifica'
     cliente = Cliente.objects.get(id=c_id)
-    if request.method == 'POST': 
+    if request.method == 'POST':
         form = ClienteForm(request.POST, instance=cliente,)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('minimo.cliente.views.clienti', )) 
+            return HttpResponseRedirect(reverse('minimo.cliente.views.clienti', ))
     else:
         form = ClienteForm(instance=cliente)
     return render_to_response('cliente/form_cliente.html',{'request':request, 'form': form,'azione': azione, 'c': cliente,}, RequestContext(request))
     #else:
     #    raise PermissionDenied
-    
+
 @login_required
 def clienti(request):
     clienti=Cliente.objects.all()
-    
+
     return render_to_response( 'cliente/clienti.html', {'request':request, 'clienti': clienti}, RequestContext(request))
 
 @login_required
 def export_clienti(request):
     clienti=Cliente.objects.all()
-    
+
     return export_csv(request, clienti, [('Ragione Sociale','ragione_sociale'),
         ('Indirizzo','indirizzo'),
         ('Codice Fiscale','codice_fiscale'),
@@ -127,7 +127,7 @@ def export_clienti(request):
 def cliente(request,c_id):
     c = Cliente.objects.get(id=c_id)
     documenti = Documento.objects.filter(ragione_sociale=c.ragione_sociale)
-    attivita = Attivita.objects.filter(cliente=c)
+    attivita = RigaAttivita.objects.filter(cliente=c, fatturata=False)[:100]
     form = AtomForm()
     context = {
         'request':request,
@@ -161,4 +161,3 @@ def get_clienti(request):
                     results.append("%s" %(x.ragione_sociale))
     json = simplejson.dumps(results)
     return HttpResponse(json, mimetype='application/json')
-

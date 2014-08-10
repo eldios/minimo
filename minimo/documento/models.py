@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 
 import os
-import config
+#import config
 
 
 class UnitaMisura(models.Model):

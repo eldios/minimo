@@ -29,21 +29,24 @@
 		<span class="icon-bar"></span>
 		</a>
 		<a class="brand" href="#"> Minimo</a>
+		{% if request.user.id%}
 		<div class="nav-collapse">
 			<ul class="nav">
   				<li id="nav-clienti"><a href="{% url 'minimo.cliente.views.clienti' %}"><i class="icon-user"></i> Clienti</a></li>
 				<li id="nav-documenti"><a href="{% url 'minimo.documento.views.home' %}"><i class="icon-file-text"></i> Documenti</a></li>
-				<li id="nav-movimenti"><a href="{% url 'minimo.movimento.views.movimenti' %}"><i class="icon-file-text"></i> Movimenti</a></li>
+				<li id="nav-movimenti"><a href="{% url 'minimo.movimento.views.movimenti' %}"><i class="icon-file-text"></i> Movimenti</a></li>				
+				<li id="nav-template"><a href="{% url 'minimo.diario.views.listarighe' %}"><i class="icon-bar-chart"></i> Diario</a></li>
 				<li id="nav-bilancio"><a href="{% url 'minimo.documento.views.bilancio' %}"><i class="icon-bar-chart"></i> Bilanci</a></li>
 				<li id="nav-template"><a href="{% url 'minimo.template.views.template' %}"><i class="icon-bar-chart"></i> Impostazioni</a></li>
 
-			</ul> 
+			</ul>
 
 		</div>
 		<script>
 			var url="{{request.path}}";
 			$("#nav-"+url.split("/")[1]).addClass("active")
 		</script>
+		{% endif %}
 		{% if request.user.id%}
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -58,8 +61,8 @@
 		{% comment %}{%else%}
 			<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="navbar-form pull-right"> {% csrf_token %}
 			<input type="hidden" name="next" value="{{request.path}}" />
-			<input id="id_username" type="text" name="username" class="input" placeholder="Utente"> 
-			<input type="password" name="password" id="id_password" class="input" placeholder="Password"> 
+			<input id="id_username" type="text" name="username" class="input" placeholder="Utente">
+			<input type="password" name="password" id="id_password" class="input" placeholder="Password">
 			<button type="submit" class="btn"><i class="icon-key"></i> Accedi</button>
 			</form>{% endcomment %}
 		{% endif %}
@@ -77,11 +80,11 @@
 		</div>
 	</div>
 	<div class="row-fluid">
-		
+
 		<div class="span2" id="left" >{% block left %}{% endblock %}</div>
 
 		<div class="span10" id="main" >
-		
+
 		{% block main %}{% endblock %}
 
 		</div>

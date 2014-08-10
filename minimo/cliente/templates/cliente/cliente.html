@@ -18,6 +18,11 @@
 						document.location.href = "{% url 'minimo.cliente.views.eliminacliente' c.id %}";
 						}
 				}
+		function CreaFattura() {
+				if ( confirm("Creare una fattura delle righe attivit&agrave?") ) {
+						document.location.href = "{% url 'minimo.diario.views.fattura_attivita' c.id %}";
+						}
+				}
 	</script>
 
 {% endblock %}
@@ -128,7 +133,7 @@
 				<tbody>
 					{% for fattura in fa %}
 						<tr>
-							<td><a href="{% url 'minimo.documento.views.dettagli_documento' fattura.id %}" ><i class="icon-search"> </i> 
+							<td><a href="{% url 'minimo.documento.views.dettagli_documento' fattura.id %}" ><i class="icon-search"> </i>
 								{{fattura}}</a></td>
 							<td>{{fattura.data}}</td>
 							<td>{{fattura.totale}} €</td>
@@ -154,7 +159,7 @@
 				<tbody>
 					{% for doc in ra %}
 						<tr>
-							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i> 
+							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i>
 								{{doc}}</a></td>
 							<td>{{doc.data}}</td>
 							<td>{{doc.totale}} €</td>
@@ -180,7 +185,7 @@
 				<tbody>
 					{% for doc in pr %}
 						<tr>
-							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i> 
+							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i>
 								{{doc}}</a></td>
 							<td>{{doc.data}}</td>
 							<td>{{doc.totale}} €</td>
@@ -206,7 +211,7 @@
 				<tbody>
 					{% for doc in or %}
 						<tr>
-							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i> 
+							<td><a href="{% url 'minimo.documento.views.dettagli_documento' doc.id %}" ><i class="icon-search"> </i>
 								{{doc}}</a></td>
 							<td>{{doc.data}}</td>
 							<td>{{doc.totale}} €</td>
@@ -220,26 +225,58 @@
 			</table>
 		</div>
 		<div class="tab-pane fade in " id="tab-5">
-			<table class="table table-striped" id="diario">
+			<table class="table table-striped" id="attivita">
 				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Descrizione</th>
-						<th>Stato</th>
-					</tr>
+				<tr>
+					<th>Attivit&agrave</th>
+					<th>Descrizione</th>
+					<th>Inizio</th>
+					<th>Fine</th>
+					<th>Quantit&agrave</th>
+					<th>Prezzo</th>
+					<th>Stato</th>
+					<th></th>
+				</tr>
 				</thead>
 				<tbody>
-					{% for doc in a %}
-						<tr>
-							<td><a href="{% url 'minimo.diario.views.dettaglioattivita' doc.id %}" ><i class="icon-search"> </i> 
-								{{doc.id}}</a></td>
-							<td>{{doc.descrizione}}</td>
-							<td>
-								{% if doc.stato %}<i class="icon-check"></i>
-								{% else %}<i class="icon-check-empty"></i>{% endif %}
-							</td>
-						</tr>
-					{% endfor %}
+
+				{% for r in a %}
+					<tr>
+						<td>
+							{{r.attivita}}
+						</td>
+						<td>
+							{{r.descrizione}}
+						</td>
+						<td>
+							{% if r.inizio %}
+								{{r.inizio}}
+							{% endif %}
+						</td>
+						<td>
+							{% if r.fine %}
+								{{r.fine}}
+							{% endif %}
+						</td>
+						<td>
+							{{r.quantita}}
+						</td>
+						<td>
+							{{r.prezzo}}
+						</td>
+						<td>
+							{{r.stato}}
+						</td>
+
+						<td>
+							<div class="btn-group">
+								<a href="{% url 'minimo.diario.views.mrigattivita' r.id %}" class="btn small-btn"><i class="icon-edit"></i> modifica</a>
+								<a href="{% url 'minimo.diario.views.erigattivita' r.id %}" class="btn small-btn"><i class="icon-trash"></i> elimina</a>
+
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
 				</tbody>
 			</table>
 		</div>
@@ -252,6 +289,5 @@
 <h4>Azioni</h4>
 <a href="{% url 'minimo.cliente.views.modificacliente' c.id %}" class="btn btn-block "><i class="icon-edit"></i> modifica</a>
 <a href="#" class="btn btn-block " onClick="CancellaCliente();"><i class="icon-trash"></i> elimina</a>
-<a href="{% url 'minimo.diario.views.nuovattivitacliente' c.id %}" class="btn btn-block "><i class="icon-edit"></i> Nuova Attività</a>
-
+<a href="#" class="btn btn-block " onClick="CreaFattura();"><i class="icon-edit"></i> Fattura righe diario</a>
 {% endblock%}

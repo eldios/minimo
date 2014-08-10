@@ -34,22 +34,22 @@ def listaattivitacliente(request, id_c):
     azione = 'lista'
     cliente=Cliente.objects.filter(id=id_c)
     attivita = Attivita.objects.filter(cliente=cliente)
-    
+
     return render_to_response( 'diario/lista_attivita.html', {'request':request, 'attivita': attivita}, RequestContext(request))
 
 @login_required
-def listaattivita(request):
+def listarighe(request):
     azione = 'lista'
-    attivita = Attivita.objects.all()[:100]
-    
-    return render_to_response( 'diario/lista_attivita.html', {'request':request, 'attivita': attivita}, RequestContext(request))
+    righe = RigaAttivita.objects.filter(fatturata=False).exclude(cliente=None)[:100]
+    formRiga = RigaForm()
+    return render_to_response( 'diario/lista_righe.html', {'request':request, 'righe': righe, 'form': formRiga,}, RequestContext(request))
 
 @login_required
 def listaattivitacliente(request, id_c):
     azione = 'lista'
     cliente=Cliente.objects.filter(id=id_c)
-    attivita = Attivita.objects.filter(cliente=cliente)
-    
+    attivita = RigaAttivita.objects.filter(cliente=cliente, fatturata=False)
+
     return render_to_response( 'diario/lista_attivita.html', {'request':request, 'attivita': attivita}, RequestContext(request))
 
 @login_required
@@ -65,15 +65,47 @@ def nuovattivitacliente(request, id_c):
     azione = 'nuovo'
     cliente = Cliente.objects.get(id=id_c)
     if request.method == 'POST':
-        form = AttivitaForm(request.POST)
+        form = AttivitaClienteForm(request.POST)
         if form.is_valid():
             a = form.save(commit=False)
             a.cliente = cliente
             a.save()
             return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(a.id),),))
     else:
+        form = AttivitaClienteForm()
+    return render_to_response('diario/form_attivita.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
+
+
+@login_required
+def nuovattivita(request):
+    azione = 'nuovo'
+    if request.method == 'POST':
+        form = AttivitaForm(request.POST)
+        if form.is_valid():
+            a = form.save(commit=False)
+            a.cliente = None
+            a.save()
+            return HttpResponseRedirect(reverse('minimo.diario.views.listarighe',))
+    else:
         form = AttivitaForm()
     return render_to_response('diario/form_attivita.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
+
+@login_required
+def nuovarigattivita(request):
+    azione = 'nuovo'
+
+    if request.method == 'POST':
+        form = RigaForm(request.POST)
+        form.helper.form_action = reverse('minimo.diario.views.nuovarigattivita',)
+        if form.is_valid():
+            r = form.save(commit=False)
+            r.save()
+            return HttpResponseRedirect(reverse('minimo.diario.views.listarighe', ))
+    else:
+        form = RigaForm()
+        form.helper.form_action = reverse('minimo.diario.views.nrigattivita', args=(str(attivita.id),),)
+    return render_to_response('diario/form_attivita.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
+
 
 @login_required
 def nrigattivita(request, id_a):
@@ -86,7 +118,7 @@ def nrigattivita(request, id_a):
             r = form.save(commit=False)
             r.attivita = attivita
             r.save()
-            return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(attivita.id),))) 
+            return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(attivita.id),)))
     else:
         form = AttivitaRigaForm()
         form.helper.form_action = reverse('minimo.diario.views.nrigattivita', args=(str(attivita.id),),)
@@ -95,14 +127,14 @@ def nrigattivita(request, id_a):
 
 @login_required
 def fattura_attivita(request, id_a):
-    attivita = Attivita.objects.get(id=id_a)
-    righe = RigaAttivita.objects.filter(attivita=attivita)
+    cliente = Cliente.objects.get(id=id_a)
+    righe = RigaAttivita.objects.filter(cliente=cliente, fatturata=False)
     azione = 'Nuovo'
     if request.method == 'POST':
         form = FatturaAttivitaForm(request.POST)
-        form.helper.form_action = reverse('minimo.diario.views.fattura_attivita', args=(str(attivita.id),),)
+        form.helper.form_action = reverse('minimo.diario.views.fattura_attivita', args=(str(cliente.id),),)
         if form.is_valid():
-            cliente = attivita.cliente
+            cliente = cliente
             f=form.save(commit=False)
             try:
                 f.descrizione_ritenuta = form.cleaned_data['descrizione_ritenuta']
@@ -113,21 +145,24 @@ def fattura_attivita(request, id_a):
             f.save()
             for r in righe:
                 riga = RigaDocumento(documento=f)
-                riga.descrizione = 'Tipo: ' + r.tipo + attivita.descrizione + ': ' + r.descrizione
+                riga.descrizione = r.descrizione
                 riga.quantita = r.quantita
                 riga.importo_unitario = r.prezzo
                 if f.tipo == 'FA':
                     riga.imposta = 20.0
                 riga.save()
-            
+                r.fatturata = True
+                r.save()
+
             copia_dati_fiscali(f, cliente)
-            attivita.stato = True
-            attivita.save()
+            #attivita.stato = True
+            #attivita.save()
             return HttpResponseRedirect(reverse('minimo.documento.views.dettagli_documento', args=(str(f.id),),))
     else:
         form = FatturaAttivitaForm()
-        form.helper.form_action = reverse('minimo.diario.views.fattura_attivita', args=(str(attivita.id),),)
+        form.helper.form_action = reverse('minimo.diario.views.fattura_attivita', args=(str(cliente.id),),)
     return render_to_response('documento/form_documento.html',{'request':request,'form': form,'azione': azione,}, RequestContext(request))
+
 
 @login_required
 def mrigattivita(request, id_a):
@@ -135,15 +170,15 @@ def mrigattivita(request, id_a):
     riga = RigaAttivita.objects.get(id=id_a)
     attivita = riga.attivita
     if request.method == 'POST':
-        form = AttivitaRigaForm(request.POST, instance=riga)
+        form = RigaForm(request.POST, instance=riga)
         form.helper.form_action = reverse('minimo.diario.views.mrigattivita', args=(str(riga.id),),)
         if form.is_valid():
-            
+
             form.save()
-            return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(attivita.id),))) 
+            return HttpResponseRedirect(reverse('minimo.diario.views.dettaglioattivita', args=(str(attivita.id),)))
     else:
         print 'no post'
-        form = AttivitaRigaForm(instance=riga)
+        form = RigaForm(instance=riga)
         form.helper.form_action = reverse('minimo.diario.views.mrigattivita', args=(str(riga.id),),)
     return render_to_response('diario/form_attivita.html',{'request':request, 'form': form,'azione': azione}, RequestContext(request))
 
