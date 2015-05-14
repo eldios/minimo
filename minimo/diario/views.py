@@ -5,14 +5,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 from django.core.urlresolvers import reverse
 
-import webodt
+
 import cStringIO as StringIO
 from django.template.loader import render_to_string
 import pdb
 import os
 from django.conf import settings
 from django.db.models import Sum
-from webodt.converters import converter
 import datetime as dt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login

@@ -13,10 +13,8 @@ from django.core.mail import send_mail, EmailMessage
 from django.core import serializers
 from django.utils import simplejson
 
-import webodt
 import pdb
 import os
-from webodt.converters import converter
 import datetime as dt
 import csv, codecs
 

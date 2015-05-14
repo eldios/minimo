@@ -4,14 +4,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 
-import webodt
 import cStringIO as StringIO
 from django.template.loader import render_to_string
 import pdb
 import os
 from django.conf import settings
 from django.db.models import Sum
-from webodt.converters import converter
 import datetime as dt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -127,7 +125,7 @@ def export_clienti(request):
 def cliente(request,c_id):
     c = Cliente.objects.get(id=c_id)
     documenti = Documento.objects.filter(ragione_sociale=c.ragione_sociale)
-    attivita = RigaAttivita.objects.filter(cliente=c, fatturata=False)[:100]
+    attivita = RigaAttivita.objects.filter(cliente=c)[:100]
     form = AtomForm()
     context = {
         'request':request,

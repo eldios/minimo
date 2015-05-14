@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import os
 
 def content_file_name(instance, filename):
-    return '/'.join(['content', "template-"+str(instance.nome)+".odt"])
+    return '/'.join(['content', "template-"+str(instance.nome)+".html"])
 
 
 class TemplateDocumento(models.Model):
@@ -17,12 +17,12 @@ class TemplateDocumento(models.Model):
     nome = models.CharField('Nome',max_length=70, unique=True)
     descrizione = models.CharField('Descrizione',max_length=70, blank=True, null=True)
     template = models.FileField(upload_to=content_file_name)
-    
-    
+
+
     def __unicode__(self):
         return '%s' % (self.nome)
-    
-    
+
+
     def save(self, *args, **kwargs):
         # delete old file when replacing by updating the file
         try:
@@ -30,5 +30,5 @@ class TemplateDocumento(models.Model):
             if this.template != self.template:
                 this.template.delete(save=False)
         except:
-            pass # when new photo then we do nothing, normal case          
+            pass # when new photo then we do nothing, normal case
         super(TemplateDocumento, self).save(*args, **kwargs)

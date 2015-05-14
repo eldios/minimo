@@ -60,11 +60,11 @@ def modificatemplate(request,t_id):
 @login_required
 def eliminatemplate(request,t_id):
     template = TemplateDocumento.objects.get(id=t_id)
-    #if template.user == request.user or request.user.is_superuser:  
+    #if template.user == request.user or request.user.is_superuser:
     template.delete()
     return HttpResponseRedirect('/template')
     #else:
-    #    raise PermissionDenied      
+    #    raise PermissionDenied
 
 @login_required
 def template(request):
@@ -72,5 +72,4 @@ def template(request):
     template=TemplateDocumento.objects.all()
     #else:
     #    template=TemplateDocumento.objects.filter(user=request.user)
-    return render_to_response( 'template/template.html', {'request':request, 'templates': template, 'template_esempio':'template_standard.odt'}, RequestContext(request))
-
+    return render_to_response( 'template/template.html', {'request':request, 'templates': template, 'template_esempio':'template_standard.html'}, RequestContext(request))

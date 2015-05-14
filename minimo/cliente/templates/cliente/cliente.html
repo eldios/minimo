@@ -259,13 +259,17 @@
 							{% endif %}
 						</td>
 						<td>
-							{{r.quantita}}
+							{{r.quantita|floatformat:2}}
 						</td>
 						<td>
 							{{r.prezzo}}
 						</td>
 						<td>
-							{{r.stato}}
+							{% if r.fatturata %}
+								<i class="icon-check icon-large"></i>
+							{% else %}
+								<i class="icon-check-empty icon-large"></i>
+							{% endif %}
 						</td>
 
 						<td>

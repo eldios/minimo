@@ -16,7 +16,6 @@ from django.utils import simplejson
 
 import datetime as dt
 import csv, codecs
-import webodt
 import pdb
 import os
 

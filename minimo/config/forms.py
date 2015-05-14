@@ -7,7 +7,7 @@ from crispy_forms.bootstrap import *
 
 from minimo.template.models import *
 
-        
+
 
 class TemplateDocumentoForm(forms.ModelForm):
     class Meta:
@@ -23,15 +23,13 @@ class TemplateDocumentoForm(forms.ModelForm):
             )
         )
         super(TemplateDocumentoForm, self).__init__(*args, **kwargs)
-        
-        
+
+
     def clean_template(self):
         filename = self.cleaned_data["template"]
         ext = os.path.splitext(filename.name)[1]
         ext = ext.lower()
         #print "clean_file value: %s" % ext
-        if ext != ".odt" :
-            raise forms.ValidationError("Il file deve avere estensione .odt!")
+        if ext != ".html" :
+            raise forms.ValidationError("Il file deve avere estensione .html!")
         return filename
-    
-    
