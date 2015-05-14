@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fattura</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://contab.silvergeko.it/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <![endif]-->
+    <style>
+        body, html{
+            background-color: #FFF;
+        }
+        img {
+            height: 200px;
+            width: auto;
+        }
+        .well {
+            background-color: #DFF0D8;
+        }
+    </style>
+
+  </head>
+
+  <body >
+
+    <div class="container">
+
+
+
+        <div class="row">
+            <div class="span4">
+                <img src="http://contab.silvergeko.it/static/img/logo.png" class="img-rounded">
+            </div>
+            <div class="span8">
+
+              <h2 class="text-right"><strong>Scopel Emanuele</strong></h2>
+              <p class="text-right">
+                  Via xxxxxx, xx<br>
+                  xxxxx xxxxx BI<br>
+                  cod.fisc.:​ xxxxxxxxxxxxxx<br>
+                  Tel:​ xxxxxxxxxxxxxxx<br>
+                  Email:​ scopel.emanuele@silvergeko.it<br>
+                  web:​ www.silvergeko.it<br>
+              </p>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="span6">
+                <p style="margin-top: 120px;"><strong>Dettaglio {{fattura.tipo_documento}} {{fattura.progressivo}}  del {{fattura.data}}</strong></p>
+            </div>
+            <div class="span5 well">
+                Spett.le<br>
+                <h5>{{fattura.ragione_sociale}}</h5>
+                {{fattura.via}}<br>
+                {{fattura.cap}} {{fattura.citta}} {{fattura.provincia}}<br>
+                P.IVA {{fattura.p_iva}}<br>
+            </div>
+        </div>
+        <div class="row">
+                <table class="table table-bordered table-striped">
+                    <thead style="background-color: #DFF0D8;">
+                        <tr >
+                            <th>
+                                Descrizione
+                            </th>
+                            <th>
+                                Prezzo
+                            </th>
+                            <th>
+                                Quanità
+                            </th>
+                            <th>
+                                Unità di misura
+                            </th>
+                            <th>
+                                Totale
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in fattura.righe %}
+                        <tr>
+                            <td>
+                                {{p.descrizione}}
+                            </td>
+                            <td>
+                                {{p.importo_unitario}}
+                            </td>
+                            <td>
+                                {{p.quantita}}
+                            </td>
+                            <td>
+                                {{p.unita.sigla}}
+                            </td>
+                            <td>
+                                {{p.totale_netto}} €
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <div class="row">
+            <div class="span6">
+
+            </div>
+            <div class="span6">
+                <table class="table table-bordered">
+
+                    <tbody style="background-color: #DFF0D8;">
+                        <tr>
+                            <td>
+                                <strong>{{fattura.descrizione_ritenuta}} da versare {{fattura.ritenuta}}% </strong>
+                            </td>
+                            <td>
+                                <strong>{{fattura.tot_ritenute}} €</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Totale dovuto</strong>
+                            </td>
+                            <td>
+                                <strong>{{fattura.totale}} €</strong>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Totale imponibile</strong>
+                            </td>
+                            <td>
+                                <strong>{{fattura.imponibile}} €</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <p class="well">
+                Il sottoscritto Scopel Emanuele nato a xxxxxxx il xxxxxxxxxx e residente in via xxxxxxx, xx xxxxxx xxxxxxxxx Codice Fiscale xxxxxxxxxxxxxx, dichiara di ricevere la somma di {{fattura.totale}} da {{fattura.cliente.ragione_sociale}} a titolo di prestazione occasionale di lavoro autonomo, senza alcun vincolo di subordinazione ed orario.
+Al riguardo si precisa di non essere iscritto in nessun albo professionale e di non essere titolare di partita IVA.
+            </p>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <h4 class="text-center" style="background-color: #DFF0D8;" >
+                Termini di pagamento:
+                </h4>
+                <p>
+                    {{fattura.pagamento}}<br>
+                    Istituto Bancario: Banca xxxxxxxx<br>
+                    IBAN: IT xxxxx I xxxxx xxxxxxxxx xxxxxxxxxxx<br>
+                    Intestato a: Scopel Emanuele<br>
+                </p>
+            </div>
+            <div class="span8">
+                <h4 class="text-left" style="background-color: #DFF0D8;">
+                Note:
+                </h4>
+                <p>
+                    {{fattura.note}}
+                </p>
+            </div>
+        </div>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
